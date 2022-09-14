@@ -76,24 +76,36 @@ const Home: NextPage = () => {
           .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
           .sort((a, b) => +a.completed - +b.completed)
           .map((todo, index) => (
-            <div key={+todo.createdAt} className="flex items-center gap-4">
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => handleChecked(index)}
-                className="checkbox"
-              />
-              <span onClick={() => handleChecked(index)} className="flex-1 cursor-pointer">
-                {todo.completed ? <s>{todo.todo}</s> : todo.todo}
-              </span>
-              <button onClick={() => handleDelete(index)} className="btn btn-square btn-error btn-xs">
-                X
-              </button>
-            </div>
+            <TodoItemView {...todo} onComplete={() => handleChecked(index)} onDelete={() => handleDelete(index)} />
           ))}
       </div>
     </div>
   );
 };
+
+type TodoItemViewProps = Todo & {
+  onComplete: () => void;
+  onDelete: () => void;
+}
+
+function TodoItemView({ completed, todo, createdAt, onComplete, onDelete }: TodoItemViewProps) {
+  return (
+    <div key={+createdAt} className="flex items-center gap-4">
+      <input
+        type="checkbox"
+        checked={completed}
+        onChange={onComplete}
+        className="checkbox"
+      />
+      <span onClick={onComplete} className="flex-1 cursor-pointer">
+        {completed ? <s>{todo}</s> : todo}
+      </span>
+      <button onClick={onDelete} className="btn btn-square btn-error btn-xs">
+        X
+      </button>
+    </div>
+  );
+}
+
 
 export default Home;
